@@ -1,6 +1,7 @@
 ﻿using System;
 using Model;
 using RestSharp;
+using RestSharp.Deserializers;
 
 namespace Client
 {
@@ -8,8 +9,14 @@ namespace Client
     {
         static void Main(string[] args)
         {
+            // This example uses RestSharp to interact with the REST service.
+            // http://restsharp.org/
             var client = new RestClient("http://localhost:88/api/");
-
+            
+            // Uncomment to enable XML responses
+            //client.ClearHandlers();
+            //client.AddHandler("application/xml", new XmlDeserializer());
+       
             //GET prospects
             var request = new RestRequest("prospects", Method.GET);
             var response = client.Execute(request);
@@ -17,7 +24,8 @@ namespace Client
 
             //GET prospects/3
             request = new RestRequest("prospects/3", Method.GET);
-            response = client.Execute(request);
+            var responseAsProspect = client.Execute<Prospect>(request);
+            var prospect3 = responseAsProspect.Data;
             DisplayResponse(response);
 
             //POST prospects
@@ -41,7 +49,7 @@ namespace Client
         private static void DisplayResponse(IRestResponse response)
         {
             Console.WriteLine(response.Content);
-            Console.WriteLine(string.Format("{0} - {1}",(int)response.StatusCode, response.StatusDescription));
+            Console.WriteLine("{0} - {1}", (int)response.StatusCode, response.StatusDescription);
             Console.WriteLine();
         }
     }
