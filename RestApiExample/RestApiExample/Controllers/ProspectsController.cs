@@ -23,7 +23,11 @@ namespace RestApiExample.Controllers
         // Returns 200
         public Prospect Get(int id)
         {
-            return _repository.FindAll(p => p.Id == id).First();
+            var prospect = _repository.FindAll(p => p.Id == id).FirstOrDefault();
+            if (prospect == null)
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+
+            return prospect;
         }
 
         // POST api/prospects
@@ -47,7 +51,10 @@ namespace RestApiExample.Controllers
         // Returns 204
         public void Put(int id, [FromBody] string value)
         {
-            var matchedProspect = _repository.FindAll(p => p.Id == id).First();
+            var matchedProspect = _repository.FindAll(p => p.Id == id).FirstOrDefault();
+            if (matchedProspect == null)
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+
             _repository.Delete(matchedProspect);
 
             matchedProspect.Name = value;
@@ -58,7 +65,10 @@ namespace RestApiExample.Controllers
         // Returns 204
         public void Delete(int id)
         {
-            var prospectToBeDeleted = _repository.FindAll(p => p.Id == id).First();
+            var prospectToBeDeleted = _repository.FindAll(p => p.Id == id).FirstOrDefault();
+            if (prospectToBeDeleted == null)
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+
             _repository.Delete(prospectToBeDeleted);
         }
     }
