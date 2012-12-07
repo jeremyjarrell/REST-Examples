@@ -1,7 +1,6 @@
 ﻿using System;
 using Model;
 using RestSharp;
-using RestSharp.Deserializers;
 
 namespace Client
 {
@@ -12,11 +11,7 @@ namespace Client
             // This example uses RestSharp to interact with the REST service.
             // http://restsharp.org/
             var client = new RestClient("http://localhost:88/api/");
-            
-            // Uncomment to enable XML responses
-            //client.ClearHandlers();
-            //client.AddHandler("application/xml", new XmlDeserializer());
-       
+
             //GET prospects
             var request = new RestRequest("prospects", Method.GET);
             var response = client.Execute(request);
